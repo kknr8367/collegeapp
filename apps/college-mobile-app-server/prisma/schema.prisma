@@ -1,0 +1,129 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ClassModel {
+  courseMaterials CourseMaterial[]
+  createdAt       DateTime         @default(now())
+  id              String           @id @default(cuid())
+  name            String?
+  notification    Boolean?
+  schedule        String?
+  updatedAt       DateTime         @updatedAt
+  user            User?            @relation(fields: [userId], references: [id])
+  userId          String?
+}
+
+model CourseMaterial {
+  classField   ClassModel? @relation(fields: [classFieldId], references: [id])
+  classFieldId String?
+  content      String?
+  createdAt    DateTime    @default(now())
+  id           String      @id @default(cuid())
+  title        String?
+  updatedAt    DateTime    @updatedAt
+}
+
+model Grade {
+  academicProgress String?
+  createdAt        DateTime @default(now())
+  id               String   @id @default(cuid())
+  updatedAt        DateTime @updatedAt
+  user             User?    @relation(fields: [userId], references: [id])
+  userId           String?
+  value            Float?
+}
+
+model News {
+  announcement String?
+  createdAt    DateTime @default(now())
+  id           String   @id @default(cuid())
+  title        String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Event {
+  calendarNotification Boolean?
+  createdAt            DateTime @default(now())
+  description          String?
+  id                   String   @id @default(cuid())
+  title                String?
+  updatedAt            DateTime @updatedAt
+}
+
+model Message {
+  content   String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  receiver  String?
+  sender    String?
+  updatedAt DateTime @updatedAt
+}
+
+model LibraryResource {
+  author       String?
+  availability Boolean?
+  createdAt    DateTime @default(now())
+  id           String   @id @default(cuid())
+  title        String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Feedback {
+  comment   String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model HealthService {
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  name        String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Forum {
+  createdAt  DateTime @default(now())
+  discussion String?
+  id         String   @id @default(cuid())
+  studyGroup Boolean?
+  updatedAt  DateTime @updatedAt
+}
+
+model DiningMenu {
+  createdAt DateTime @default(now())
+  hours     String?
+  id        String   @id @default(cuid())
+  item      String?
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  classes   ClassModel[]
+  createdAt DateTime      @default(now())
+  email     String?       @unique
+  feedbacks Feedback[]
+  firstName String?
+  grades    Grade[]
+  id        String        @id @default(cuid())
+  lastName  String?
+  password  String
+  profile   String?
+  role      EnumUserRole?
+  roles     Json
+  updatedAt DateTime      @updatedAt
+  username  String        @unique
+}
+
+enum EnumUserRole {
+  Option1
+}
